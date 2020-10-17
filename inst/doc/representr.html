@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Andee Kaplan and Rebecca C. Steorts" />
+
+<meta name="date" content="2020-10-09" />
+
+<title>Prototyping with representr</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Prototyping with <code>representr</code></h1>
+<h4 class="author">Andee Kaplan and Rebecca C. Steorts</h4>
+<h4 class="date">2020-10-09</h4>
+
+
+
+<div id="background-and-motivating-example" class="section level1">
+<h1>Background and Motivating Example</h1>
+<p>Record linkage (entity resolution or de-duplication) is used to join multiple databases to remove duplicate entities. While record linkage removes the duplicate entities from the data, many researchers are interested in performing inference, prediction, or post-linkage analysis on the linked data (e.g., regression or capture-recapture), which we call the <em>downstream task</em>. Depending on the downstream task, one may wish to find the most representative record before performing the post-linkage analysis. For example, when the values of features used in a downstream task differ for linked data, which values should be used? This is where <code>representr</code> comes in. Before introducing our new package <code>representr</code> from the paper <span class="citation">Kaplan, Betancourt, and Steorts</span>, we first provide an introduction to record linkage.</p>
+<p>Throughout this vignette, we will use data that is available in the <code>representr</code> package, <code>rl_reg1</code> (rl = record linkage, reg = regression, 1 = amount of noisiness).</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co"># load libraries</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">library</span>(representr)</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw">library</span>(stringdist)</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="co"># load data</span></a>
+<a class="sourceLine" id="cb1-6" data-line-number="6"><span class="kw">data</span>(<span class="st">&quot;rl_reg1&quot;</span>) <span class="co"># data for record linkage and regression</span></a>
+<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="kw">data</span>(<span class="st">&quot;identity.rl_reg1&quot;</span>) <span class="co"># true identity of each record</span></a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">fname</th>
+<th align="left">lname</th>
+<th align="right">bm</th>
+<th align="right">bd</th>
+<th align="right">by</th>
+<th align="left">sex</th>
+<th align="left">education</th>
+<th align="right">income</th>
+<th align="right">bp</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">jasmine</td>
+<td align="left">sirotic</td>
+<td align="right">3</td>
+<td align="right">31</td>
+<td align="right">1972</td>
+<td align="left">F</td>
+<td align="left">High school graduates, no college</td>
+<td align="right">32</td>
+<td align="right">127</td>
+</tr>
+<tr class="even">
+<td align="left">hugo</td>
+<td align="left">white</td>
+<td align="right">6</td>
+<td align="right">9</td>
+<td align="right">1958</td>
+<td align="left">M</td>
+<td align="left">Bachelor’s degree only</td>
+<td align="right">72</td>
+<td align="right">134</td>
+</tr>
+<tr class="odd">
+<td align="left">madeline</td>
+<td align="left">burgemeifter</td>
+<td align="right">12</td>
+<td align="right">9</td>
+<td align="right">1967</td>
+<td align="left">F</td>
+<td align="left">Some college or associate degree</td>
+<td align="right">30</td>
+<td align="right">130</td>
+</tr>
+<tr class="even">
+<td align="left">kyle</td>
+<td align="left">clarke</td>
+<td align="right">4</td>
+<td align="right">9</td>
+<td align="right">1952</td>
+<td align="left">M</td>
+<td align="left">Advanced degree</td>
+<td align="right">90</td>
+<td align="right">125</td>
+</tr>
+<tr class="odd">
+<td align="left">livia</td>
+<td align="left">braciak</td>
+<td align="right">11</td>
+<td align="right">6</td>
+<td align="right">1950</td>
+<td align="left">F</td>
+<td align="left">High school graduates, no college</td>
+<td align="right">27</td>
+<td align="right">134</td>
+</tr>
+<tr class="even">
+<td align="left">phoebe</td>
+<td align="left">green</td>
+<td align="right">8</td>
+<td align="right">8</td>
+<td align="right">1957</td>
+<td align="left">F</td>
+<td align="left">High school graduates, no college</td>
+<td align="right">32</td>
+<td align="right">128</td>
+</tr>
+</tbody>
+</table>
+<p>This is simulated data, which consists of 500 records with 30% duplication and the following attributes:</p>
+<ul>
+<li><code>fname</code>: First name</li>
+<li><code>lname</code>: Last name</li>
+<li><code>bm</code>: Birth month (numeric)</li>
+<li><code>bd</code>: Birth day</li>
+<li><code>by</code>: Birth year</li>
+<li><code>sex</code>: Sex (“M” or “F”)</li>
+<li><code>education</code>: Education level (“Less than a high school diploma”, &quot;“High school graduates, no college”, “Some college or associate degree”, “Bachelor’s degree only”, or “Advanced degree”)</li>
+<li><code>income</code>: Yearly income (in $1000s)</li>
+<li><code>bp</code>: Systolic blood pressure</li>
+</ul>
+<div id="record-linkage" class="section level2">
+<h2>Record linkage</h2>
+<p>Before we perform prototyping to get a representative data set using <code>representr</code>, we must first perform record linkage to remove duplication in the data set. In the absence of unique identifier (such as a social security number), we can use probabilistic methods to perform record linkage. We recommend the use of clustering records to a latent entity, known in the literature as graphical entity resolution. See <span class="citation">(Binette and Steorts)</span> for a review.</p>
+<p>For the examples in this vignette, we will use <code>blink</code> <span class="citation">(Steorts)</span>,a Bayesian record linkage model <span class="citation">(Steorts 2015)</span>. For this example, we will run only a small number of iterations, which will certainly not have converged. For a faster (more scalable version of this), we recommend recent work of <span class="citation">(Marchant et al. 2020)</span> using either dblink or dblinkR.</p>
+<p>For a real example, we would want to let this model run longer.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co"># load blink</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw">library</span>(blink)</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co"># params for running record linkage</span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">a &lt;-<span class="st"> </span><span class="dv">1</span>; b &lt;-<span class="st"> </span><span class="dv">99</span> <span class="co"># distortion hyperparams</span></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">c &lt;-<span class="st"> </span><span class="dv">1</span> <span class="co"># string density hyperparams</span></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">d &lt;-<span class="st"> </span><span class="cf">function</span>(string1, string2){ <span class="co">#jaro-winkler string distance</span></a>
+<a class="sourceLine" id="cb2-8" data-line-number="8">  n1 &lt;-<span class="st"> </span><span class="kw">length</span>(string1)</a>
+<a class="sourceLine" id="cb2-9" data-line-number="9">  n2 &lt;-<span class="st"> </span><span class="kw">length</span>(string2)</a>
+<a class="sourceLine" id="cb2-10" data-line-number="10">  res &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="ot">NA</span>, n1, n2)</a>
+<a class="sourceLine" id="cb2-11" data-line-number="11">  <span class="cf">for</span>(i <span class="cf">in</span> <span class="kw">seq_len</span>(n1)) {</a>
+<a class="sourceLine" id="cb2-12" data-line-number="12">    <span class="cf">for</span>(j <span class="cf">in</span> <span class="kw">seq_len</span>(n2)) {</a>
+<a class="sourceLine" id="cb2-13" data-line-number="13">      res[i, j] &lt;-<span class="st"> </span><span class="kw">stringdist</span>(string1[i], string2[j], <span class="dt">method =</span> <span class="st">&quot;jw&quot;</span>)</a>
+<a class="sourceLine" id="cb2-14" data-line-number="14">    }</a>
+<a class="sourceLine" id="cb2-15" data-line-number="15">  } </a>
+<a class="sourceLine" id="cb2-16" data-line-number="16">  res</a>
+<a class="sourceLine" id="cb2-17" data-line-number="17">}  <span class="co"># vector string distance function</span></a>
+<a class="sourceLine" id="cb2-18" data-line-number="18">num.gs &lt;-<span class="st"> </span><span class="dv">10</span> <span class="co"># number of iterations</span></a>
+<a class="sourceLine" id="cb2-19" data-line-number="19">M &lt;-<span class="st"> </span><span class="kw">nrow</span>(rl_reg1) <span class="co"># upper bound on number of entities</span></a>
+<a class="sourceLine" id="cb2-20" data-line-number="20">str_idx &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>) <span class="co"># string columns</span></a>
+<a class="sourceLine" id="cb2-21" data-line-number="21">cat_idx &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>) <span class="co"># categorical columns</span></a>
+<a class="sourceLine" id="cb2-22" data-line-number="22"></a>
+<a class="sourceLine" id="cb2-23" data-line-number="23"><span class="co"># data prep </span></a>
+<a class="sourceLine" id="cb2-24" data-line-number="24"><span class="co"># X.c contains the categorical variables</span></a>
+<a class="sourceLine" id="cb2-25" data-line-number="25"><span class="co"># X.s contains the string variables </span></a>
+<a class="sourceLine" id="cb2-26" data-line-number="26">X.c &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="kw">as.matrix</span>(rl_reg1[, cat_idx]), <span class="dv">2</span>, as.character)</a>
+<a class="sourceLine" id="cb2-27" data-line-number="27">X.s &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(rl_reg1[, str_idx])</a>
+<a class="sourceLine" id="cb2-28" data-line-number="28"></a>
+<a class="sourceLine" id="cb2-29" data-line-number="29"><span class="co"># X.c and X.s include all files &quot;stacked&quot; on top of each other.</span></a>
+<a class="sourceLine" id="cb2-30" data-line-number="30"><span class="co"># The vector below keeps track of which rows of X.c and X.s are in which files.</span></a>
+<a class="sourceLine" id="cb2-31" data-line-number="31">file.num &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">nrow</span>(rl_reg1))</a>
+<a class="sourceLine" id="cb2-32" data-line-number="32"></a>
+<a class="sourceLine" id="cb2-33" data-line-number="33"><span class="co"># perform record linkage  </span></a>
+<a class="sourceLine" id="cb2-34" data-line-number="34">linkage.rl &lt;-<span class="st"> </span><span class="kw">rl.gibbs</span>(file.num, X.s, X.c, <span class="dt">num.gs=</span>num.gs, <span class="dt">a=</span>a, <span class="dt">b=</span>b, <span class="dt">c=</span>c, <span class="dt">d=</span>d, <span class="dt">M=</span>M)</a></code></pre></div>
+<p>In fact, we can load the results of running this model for <span class="math inline">\(100,000\)</span> iterations, which have been stored in the package as a data object called <code>linkage.rl</code>.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">data</span>(<span class="st">&quot;linkage.rl&quot;</span>)</a></code></pre></div>
+</div>
+<div id="the-downstream-task" class="section level2">
+<h2>The Downstream Task</h2>
+<p>After record linkage is complete, one may want to perform analyses of the linked data. This is what we call the “downstream task”. As motivation, consider modeling blood pressure (bp) using the following two features (covariates): income and sex in our example data <code>rl_reg1</code>. We want to fit this model after performing record linkage using the following features: first and last name and full data of birth. Here is an example of four records that represent the same individual (based on the results from record linkage) using data that is in the <code>representr</code> package.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="left">fname</th>
+<th align="left">lname</th>
+<th align="right">bm</th>
+<th align="right">bd</th>
+<th align="right">by</th>
+<th align="left">sex</th>
+<th align="left">education</th>
+<th align="right">income</th>
+<th align="right">bp</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">370</td>
+<td align="left">elenys</td>
+<td align="left">reit</td>
+<td align="right">11</td>
+<td align="right">11</td>
+<td align="right">1954</td>
+<td align="left">F</td>
+<td align="left">High school graduates, no college</td>
+<td align="right">28</td>
+<td align="right">109</td>
+</tr>
+<tr class="even">
+<td align="left">371</td>
+<td align="left">elen7</td>
+<td align="left">reicl</td>
+<td align="right">11</td>
+<td align="right">22</td>
+<td align="right">1954</td>
+<td align="left">F</td>
+<td align="left">Advanced degree</td>
+<td align="right">52</td>
+<td align="right">118</td>
+</tr>
+<tr class="odd">
+<td align="left">372</td>
+<td align="left">dleny</td>
+<td align="left">rejd</td>
+<td align="right">11</td>
+<td align="right">11</td>
+<td align="right">1954</td>
+<td align="left">M</td>
+<td align="left">Bachelor’s degree only</td>
+<td align="right">63</td>
+<td align="right">109</td>
+</tr>
+<tr class="even">
+<td align="left">373</td>
+<td align="left">eleni</td>
+<td align="left">reid</td>
+<td align="right">11</td>
+<td align="right">11</td>
+<td align="right">1954</td>
+<td align="left">F</td>
+<td align="left">Bachelor’s degree only</td>
+<td align="right">52</td>
+<td align="right">109</td>
+</tr>
+</tbody>
+</table>
+<p>Examination of this table raises important questions that need to be addressed before performing a particular downstream task, such as which values of bp, income, and sex should be used as the representative features (or covariates) in a regression model? In this vignette, we will provide multiple solutions to this question using a prototyping approach.</p>
+</div>
+</div>
+<div id="prototyping-methods" class="section level1">
+<h1>Prototyping methods</h1>
+<p>We have four methods to choose or create the representative record from linked data included in <code>representr</code>. This process is a function of the data and the linkage structure, and we present both probabilistic and deterministic functions. The result in all cases is a representative data set to be passed on to the downstream task. The prototyping is completed using the <code>represent()</code> function.</p>
+<div id="random-prototyping" class="section level2">
+<h2>Random Prototyping</h2>
+<p>Our first proposal to choose a representative record (<em>prototype</em>) for a cluster is the simplest and serves as a baseline or benchmark. One simply chooses the representative record uniformly at random or using a more informed distribution.</p>
+<p>For demonstration purposes, we can create a representative dataset using the last iteration of the results from running the record linkage model using <code>blink</code>. This is accomplished using the <code>represent()</code> function, and passing through the type of prototyping to be <code>proto_random</code>.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co"># ids for representative records (random)</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">random_id &lt;-<span class="st"> </span><span class="kw">represent</span>(rl_reg1, lambda, <span class="st">&quot;proto_random&quot;</span>, <span class="dt">parallel =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">rep_random &lt;-<span class="st"> </span>rl_reg1[random_id,] <span class="co"># representative records (random)</span></a></code></pre></div>
+<p>We can have a look at a few records chosen as representative in this way.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="left">fname</th>
+<th align="left">lname</th>
+<th align="right">bm</th>
+<th align="right">bd</th>
+<th align="right">by</th>
+<th align="left">sex</th>
+<th align="left">education</th>
+<th align="right">income</th>
+<th align="right">bp</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">240</td>
+<td align="left">callum</td>
+<td align="left">lecke</td>
+<td align="right">8</td>
+<td align="right">5</td>
+<td align="right">1981</td>
+<td align="left">M</td>
+<td align="left">Advanced degree</td>
+<td align="right">86</td>
+<td align="right">126</td>
+</tr>
+<tr class="even">
+<td align="left">353</td>
+<td align="left">lachlan</td>
+<td align="left">ebert</td>
+<td align="right">5</td>
+<td align="right">15</td>
+<td align="right">1954</td>
+<td align="left">M</td>
+<td align="left">Some college or associate degree</td>
+<td align="right">42</td>
+<td align="right">150</td>
+</tr>
+<tr class="odd">
+<td align="left">162</td>
+<td align="left">francesco</td>
+<td align="left">petito</td>
+<td align="right">6</td>
+<td align="right">16</td>
+<td align="right">1972</td>
+<td align="left">M</td>
+<td align="left">High school graduates, no college</td>
+<td align="right">41</td>
+<td align="right">151</td>
+</tr>
+<tr class="even">
+<td align="left">6</td>
+<td align="left">phoebe</td>
+<td align="left">green</td>
+<td align="right">8</td>
+<td align="right">8</td>
+<td align="right">1957</td>
+<td align="left">F</td>
+<td align="left">High school graduates, no college</td>
+<td align="right">32</td>
+<td align="right">128</td>
+</tr>
+<tr class="odd">
+<td align="left">315</td>
+<td align="left">peter</td>
+<td align="left">chittleborough</td>
+<td align="right">7</td>
+<td align="right">11</td>
+<td align="right">1980</td>
+<td align="left">M</td>
+<td align="left">High school graduates, no college</td>
+<td align="right">36</td>
+<td align="right">153</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="minimax-prototyping" class="section level2">
+<h2>Minimax Prototyping</h2>
+<p>Our second proposal to choose a representative record is to select the record that “most closely captures” that of the latent entity. Of course, this is quite subjective. We propose selecting the record whose farthest neighbors within the cluster is closest, where closeness is measured by a record distance function, <span class="math inline">\(d_r(\cdot)\)</span>. We can write this as the record <span class="math inline">\(r = (i, j)\)</span> within each cluster <span class="math inline">\(\Lambda_{j'}\)</span> such that <span class="math display">\[
+r = \arg\min\limits_{(i, j) \in \Lambda_{j'}} \max\limits_{(i^*, j^*) \in \Lambda_{j'}} d_r((i, j), (i^*, j^*)).
+\]</span> The result is a set of representative records, one for each latent individual, that is closest to the other records in each cluster. When there is a tie within the cluster, we select a record uniformly at random.</p>
+<p>There are many distance functions that can be used for <span class="math inline">\(d_r(\cdot, \cdot)\)</span>. We define the distance function to be a weighted average of individual variable-level distances that depend on the column type. Given two records, <span class="math inline">\((i, j)\)</span> and <span class="math inline">\((i*, j*)\)</span>, we use a weighted average of column-wise distances (based on the column type) to produce the following single distance metric: <span class="math display">\[
+d_r((i, j), (i*, j*)) = \sum\limits_{\ell = 1}^p w_\ell d_{r\ell}((i, j), (i^*, j^*)),
+\]</span> where <span class="math inline">\(\sum\limits_{\ell = 1}^p w_\ell = 1\)</span>. The column-wise distance functions <span class="math inline">\(d_{r\ell}(\cdot, \cdot)\)</span> we use are presented below.</p>
+<table>
+<colgroup>
+<col width="16%"></col>
+<col width="83%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Column</th>
+<th><span class="math inline">\(d_{r\ell}(\cdot, \cdot)\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">String</td>
+<td>Any string distance function, i.e. Jaro-Winkler string distance</td>
+</tr>
+<tr class="even">
+<td align="left">Numeric</td>
+<td>Absolute distance, <span class="math inline">\(d_{r\ell}((i, j), (i^*, j^*)) = \mid x_{ij\ell} - x_{i^*j^*\ell} \mid\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Categorical</td>
+<td>Binary distance, <span class="math inline">\(d_{r\ell}((i, j), (i^*, j^*)) = \mathbb{I}(x_{ij\ell} != x_{i^*j^*\ell})\)</span></td>
+</tr>
+<tr class="even">
+<td align="left">Ordinal</td>
+<td>Absolute distance between levels. Let <span class="math inline">\(\gamma(x_{ij\ell})\)</span> be the order of the value <span class="math inline">\(x_{ij\ell}\)</span>, then <span class="math inline">\(d_{r\ell}((i, j), (i^*, j^*)) = \mid \gamma(x_{ij\ell}) - \gamma(x_{i^*j^*\ell}) \mid\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>The weighting of variable distances is used to place importance on individual features according to prior knowledge of the data set and to scale the feature distances to a common range. In this vignette, we scale all column-wise distances to be values between <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span>.</p>
+<p>Again, we can create a representative dataset using the last iteration of the results from running the record linkage model using <code>blink</code>. But this time we need to specify some more parameters, like what types the columns are. This is accomplished using the <code>represent()</code> function, and passing through the type of prototyping to be <code>proto_minimax</code>.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co"># additional parameters for minimax prototyping</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="co"># need column types, the order levels for any ordinal variables, and column weights</span></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">col_type &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;string&quot;</span>, <span class="st">&quot;string&quot;</span>, <span class="st">&quot;numeric&quot;</span>, <span class="st">&quot;numeric&quot;</span>, <span class="st">&quot;numeric&quot;</span>, <span class="st">&quot;categorical&quot;</span>, <span class="st">&quot;ordinal&quot;</span>, <span class="st">&quot;numeric&quot;</span>, <span class="st">&quot;numeric&quot;</span>)</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4">orders &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">education =</span> <span class="kw">c</span>(<span class="st">&quot;Less than a high school diploma&quot;</span>, <span class="st">&quot;High school graduates, no college&quot;</span>, <span class="st">&quot;Some college or associate degree&quot;</span>, <span class="st">&quot;Bachelor's degree only&quot;</span>, <span class="st">&quot;Advanced degree&quot;</span>))</a>
+<a class="sourceLine" id="cb5-5" data-line-number="5">weights &lt;-<span class="st"> </span><span class="kw">c</span>(.<span class="dv">25</span>, <span class="fl">.25</span>, <span class="fl">.05</span>, <span class="fl">.05</span>, <span class="fl">.1</span>, <span class="fl">.15</span>, <span class="fl">.05</span>, <span class="fl">.05</span>, <span class="fl">.05</span>)</a>
+<a class="sourceLine" id="cb5-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="co"># ids for representative records (minimax)</span></a>
+<a class="sourceLine" id="cb5-8" data-line-number="8">minimax_id &lt;-<span class="st"> </span><span class="kw">represent</span>(rl_reg1, linkage.rl[<span class="kw">nrow</span>(linkage.rl),], <span class="st">&quot;proto_minimax&quot;</span>,</a>
+<a class="sourceLine" id="cb5-9" data-line-number="9">                        <span class="dt">distance =</span> dist_col_type, <span class="dt">col_type =</span> col_type, </a>
+<a class="sourceLine" id="cb5-10" data-line-number="10">                        <span class="dt">weights =</span> weights, <span class="dt">orders =</span> orders, <span class="dt">scale =</span> <span class="ot">TRUE</span>, <span class="dt">parallel =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb5-11" data-line-number="11">rep_minimax &lt;-<span class="st"> </span>rl_reg1[minimax_id,] <span class="co"># representative records (minimax)</span></a></code></pre></div>
+<p>We can have a look at some of the representative records chosen via minimax prototyping.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="left">fname</th>
+<th align="left">lname</th>
+<th align="right">bm</th>
+<th align="right">bd</th>
+<th align="right">by</th>
+<th align="left">sex</th>
+<th align="left">education</th>
+<th align="right">income</th>
+<th align="right">bp</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">240</td>
+<td align="left">callum</td>
+<td align="left">lecke</td>
+<td align="right">8</td>
+<td align="right">5</td>
+<td align="right">1981</td>
+<td align="left">M</td>
+<td align="left">Advanced degree</td>
+<td align="right">86</td>
+<td align="right">126</td>
+</tr>
+<tr class="even">
+<td align="left">353</td>
+<td align="left">lachlan</td>
+<td align="left">ebert</td>
+<td align="right">5</td>
+<td align="right">15</td>
+<td align="right">1954</td>
+<td align="left">M</td>
+<td align="left">Some college or associate degree</td>
+<td align="right">42</td>
+<td align="right">150</td>
+</tr>
+<tr class="odd">
+<td align="left">162</td>
+<td align="left">francesco</td>
+<td align="left">petito</td>
+<td align="right">6</td>
+<td align="right">16</td>
+<td align="right">1972</td>
+<td align="left">M</td>
+<td align="left">High school graduates, no college</td>
+<td align="right">41</td>
+<td align="right">151</td>
+</tr>
+<tr class="even">
+<td align="left">6</td>
+<td align="left">phoebe</td>
+<td align="left">green</td>
+<td align="right">8</td>
+<td align="right">8</td>
+<td align="right">1957</td>
+<td align="left">F</td>
+<td align="left">High school graduates, no college</td>
+<td align="right">32</td>
+<td align="right">128</td>
+</tr>
+<tr class="odd">
+<td align="left">315</td>
+<td align="left">peter</td>
+<td align="left">chittleborough</td>
+<td align="right">7</td>
+<td align="right">11</td>
+<td align="right">1980</td>
+<td align="left">M</td>
+<td align="left">High school graduates, no college</td>
+<td align="right">36</td>
+<td align="right">153</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="composite-records" class="section level2">
+<h2>Composite Records</h2>
+<p>Our third proposal to choose a representative record is by aggregating the records (in each cluster) to form a composite record that includes information from each linked record. The form of aggregation can depend on the column type, and the aggregation itself can be weighted by some prior knowledge of the data sources or use the posterior information from the record linkage model. For quantitative variables, we use a weighted arithmetic mean to combine linked values, whereas for categorical variables, a weighted majority vote is used. For string variables, we use a weighted majority vote for each character, which allows for noisy strings to differ on a continuum. This is accomplished using the <code>represent()</code> function, and passing through the type of prototyping to be <code>composite</code>.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="co"># representative records (composite)</span></a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">rep_composite &lt;-<span class="st"> </span><span class="kw">represent</span>(rl_reg1, linkage.rl[<span class="kw">nrow</span>(linkage.rl),], <span class="st">&quot;composite&quot;</span>, <span class="dt">col_type =</span> col_type, <span class="dt">parallel =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<p>We can have a look at some of the representative records.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="left">fname</th>
+<th align="left">lname</th>
+<th align="right">bm</th>
+<th align="right">bd</th>
+<th align="right">by</th>
+<th align="left">sex</th>
+<th align="left">education</th>
+<th align="right">income</th>
+<th align="right">bp</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">240</td>
+<td align="left">callum</td>
+<td align="left">lecke</td>
+<td align="right">8</td>
+<td align="right">5.0</td>
+<td align="right">1981</td>
+<td align="left">M</td>
+<td align="left">Advanced degree</td>
+<td align="right">86.0</td>
+<td align="right">126</td>
+</tr>
+<tr class="even">
+<td align="left">353</td>
+<td align="left">lachlan</td>
+<td align="left">ebert</td>
+<td align="right">5</td>
+<td align="right">15.0</td>
+<td align="right">1954</td>
+<td align="left">M</td>
+<td align="left">Some college or associate degree</td>
+<td align="right">42.0</td>
+<td align="right">150</td>
+</tr>
+<tr class="odd">
+<td align="left">158</td>
+<td align="left">francesco</td>
+<td align="left">petito</td>
+<td align="right">6</td>
+<td align="right">16.4</td>
+<td align="right">1972</td>
+<td align="left">M</td>
+<td align="left">High school graduates, no college</td>
+<td align="right">52.6</td>
+<td align="right">150</td>
+</tr>
+<tr class="even">
+<td align="left">6</td>
+<td align="left">phoebe</td>
+<td align="left">green</td>
+<td align="right">8</td>
+<td align="right">8.0</td>
+<td align="right">1957</td>
+<td align="left">F</td>
+<td align="left">High school graduates, no college</td>
+<td align="right">32.0</td>
+<td align="right">128</td>
+</tr>
+<tr class="odd">
+<td align="left">315</td>
+<td align="left">peter</td>
+<td align="left">chittleborough</td>
+<td align="right">7</td>
+<td align="right">11.0</td>
+<td align="right">1980</td>
+<td align="left">M</td>
+<td align="left">High school graduates, no college</td>
+<td align="right">36.0</td>
+<td align="right">153</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="posterior-prototyping" class="section level2">
+<h2>Posterior Prototyping</h2>
+<p>Our fourth proposal to choose a representative record utilizes the minimax prototyping method in a fully Bayesian setting. This is desirable as the posterior distribution of the linkage is used to weight the downstream tasks, which allows the error from the record linkage task to be naturally propagated into the downstream task.</p>
+<p>We propose two methods for utilizing the posterior prototyping (PP) weights — a weighted downstream task and a thresholded representative data set based on the weights. As already mentioned, PP weights naturally propagate the linkage error into the downstream task, which we now explain. For each MCMC iteration from the Bayesian record linkage model, we obtain the most representative records using minimax prototyping and then compute the probability of each record being selected over all MCMC iterations. The posterior prototyping (PP) probabilities can then either be used as weights for each record in the regression or as a thresholded variant where we only include records whose PP weights are above <span class="math inline">\(0.5\)</span>. Note that a record with PP weight above 0.5 has a posterior probability greater than 0.5 of being chosen as a prototype and should be included in the final data set.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="co"># Posterior prototyping weights</span></a>
+<a class="sourceLine" id="cb7-2" data-line-number="2">pp_weights &lt;-<span class="st"> </span><span class="kw">pp_weights</span>(rl_reg1, linkage.rl[<span class="kw">seq</span>(<span class="dv">80000</span>, <span class="dv">100000</span>, <span class="dt">by =</span> <span class="dv">100</span>), ], </a>
+<a class="sourceLine" id="cb7-3" data-line-number="3">                         <span class="st">&quot;proto_minimax&quot;</span>, <span class="dt">distance =</span> dist_col_type, </a>
+<a class="sourceLine" id="cb7-4" data-line-number="4">                         <span class="dt">col_type =</span> col_type, <span class="dt">weights =</span> weights, <span class="dt">orders =</span> orders, </a>
+<a class="sourceLine" id="cb7-5" data-line-number="5">                         <span class="dt">scale =</span> <span class="ot">TRUE</span>, <span class="dt">parallel =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<p>We can look at the minimax PP weights distribution for the true and duplicated records in the data set as an example. Note that the true records consistently have higher PP weights and the proportion of duplicated records with high weights is relatively low.</p>
+<div class="figure" style="text-align: center">
+<img src="data:image/png;base64,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" alt="The distribution of PP weights as generated from posterior draws of $\boldsymbol \Lambda$ colored by if they are true or duplicated records in the original data set. The dotted vertical line shows the threshold value of 0.5. The true records have consistently higher PP weights and the proportion of duplicated records with high weights is relatively low." />
+<p class="caption">
+The distribution of PP weights as generated from posterior draws of <span class="math inline">\(\boldsymbol \Lambda\)</span> colored by if they are true or duplicated records in the original data set. The dotted vertical line shows the threshold value of 0.5. The true records have consistently higher PP weights and the proportion of duplicated records with high weights is relatively low.
+</p>
+</div>
+<p>We can make a representative dataset with these weights by using the cutoff of <span class="math inline">\(0.5\)</span>, and look at some of the records.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="co"># representative records (PP threshold)</span></a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">rep_pp_thresh &lt;-<span class="st"> </span>rl_reg1[pp_weights <span class="op">&gt;</span><span class="st"> </span><span class="fl">.5</span>, ]</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">fname</th>
+<th align="left">lname</th>
+<th align="right">bm</th>
+<th align="right">bd</th>
+<th align="right">by</th>
+<th align="left">sex</th>
+<th align="left">education</th>
+<th align="right">income</th>
+<th align="right">bp</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">jasmine</td>
+<td align="left">sirotic</td>
+<td align="right">3</td>
+<td align="right">31</td>
+<td align="right">1972</td>
+<td align="left">F</td>
+<td align="left">High school graduates, no college</td>
+<td align="right">32</td>
+<td align="right">127</td>
+</tr>
+<tr class="even">
+<td align="left">hugo</td>
+<td align="left">white</td>
+<td align="right">6</td>
+<td align="right">9</td>
+<td align="right">1958</td>
+<td align="left">M</td>
+<td align="left">Bachelor’s degree only</td>
+<td align="right">72</td>
+<td align="right">134</td>
+</tr>
+<tr class="odd">
+<td align="left">madeline</td>
+<td align="left">burgemeifter</td>
+<td align="right">12</td>
+<td align="right">9</td>
+<td align="right">1967</td>
+<td align="left">F</td>
+<td align="left">Some college or associate degree</td>
+<td align="right">30</td>
+<td align="right">130</td>
+</tr>
+<tr class="even">
+<td align="left">kyle</td>
+<td align="left">clarke</td>
+<td align="right">4</td>
+<td align="right">9</td>
+<td align="right">1952</td>
+<td align="left">M</td>
+<td align="left">Advanced degree</td>
+<td align="right">90</td>
+<td align="right">125</td>
+</tr>
+<tr class="odd">
+<td align="left">livia</td>
+<td align="left">braciak</td>
+<td align="right">11</td>
+<td align="right">6</td>
+<td align="right">1950</td>
+<td align="left">F</td>
+<td align="left">High school graduates, no college</td>
+<td align="right">27</td>
+<td align="right">134</td>
+</tr>
+<tr class="even">
+<td align="left">phoebe</td>
+<td align="left">green</td>
+<td align="right">8</td>
+<td align="right">8</td>
+<td align="right">1957</td>
+<td align="left">F</td>
+<td align="left">High school graduates, no college</td>
+<td align="right">32</td>
+<td align="right">128</td>
+</tr>
+</tbody>
+</table>
+<p>These four proposed methods each have potential benefits. The goal of prototyping is to select the correct representations of latent entities as often as possible; however, uniform random selection has no means to achieve this goal. Turning to minimax selection, if a distance function can accurately reflect the distance between pairs of records in the data set, then this method may perform well. Alternatively, composite records necessarily alter the data for all entities with multiple copies in the data, affecting some downstream tasks (like linear regression) heavily. The ability of posterior prototyping to propagate record linkage error to the downstream task is an attractive feature and a great strength of the Bayesian paradigm. In addition, the ability to use the entire posterior distribution of the linkage structure also poses the potential for superior downstream performance.</p>
+</div>
+</div>
+<div id="evaluation" class="section level1">
+<h1>Evaluation</h1>
+<p>We can evaluate the performance of our methods by assessing the distributional closeness of the representative dataset to the true records. The distributional closeness of the representative datasets to the true records is useful because one of the benefits of using a two-stage approach to record linkage and downstream analyses is the ability to perform multiple analyses with the same data set. As such, downstream performance of representative records may be dependent on the type of downstream task that is being performed. In order to assess the distributional closeness of the representative data sets to the truth, we use an empirical Kullback-Leibler (KL) divergence metric. Let <span class="math inline">\(\hat{F}_{rep}(\boldsymbol x)\)</span> and <span class="math inline">\(\hat{F}_{true}(\boldsymbol x)\)</span> be the empirical distribution functions for the representative data set and true data set, respectively (with continuous variables transformed to categorical using a histogram approach with statistically equivalent data-dependent bins). The empirical KL divergence metric we use is then defined as <span class="math display">\[
+\hat{D}_{KL}(\hat{F}_{rep} || \hat{F}_{true}) = \sum_{\boldsymbol x} \hat{F}_{rep}(\boldsymbol x) \log\left(\frac{\hat{F}_{rep}(\boldsymbol x)}{\hat{F}_{true}(\boldsymbol x)}\right).
+\]</span></p>
+<p>This metric is accessed in <code>representr</code> using the <code>emp_kl_div()</code> command.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">true_dat &lt;-<span class="st"> </span>rl_reg1[<span class="kw">unique</span>(identity.rl_reg1),] <span class="co"># true records</span></a>
+<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="kw">emp_kl_div</span>(true_dat, rep_random, <span class="kw">c</span>(<span class="st">&quot;sex&quot;</span>), <span class="kw">c</span>(<span class="st">&quot;income&quot;</span>, <span class="st">&quot;bp&quot;</span>))</a>
+<a class="sourceLine" id="cb9-3" data-line-number="3"><span class="co">#&gt; [1] 0.0204802</span></a>
+<a class="sourceLine" id="cb9-4" data-line-number="4"><span class="kw">emp_kl_div</span>(true_dat, rep_minimax, <span class="kw">c</span>(<span class="st">&quot;sex&quot;</span>), <span class="kw">c</span>(<span class="st">&quot;income&quot;</span>, <span class="st">&quot;bp&quot;</span>))</a>
+<a class="sourceLine" id="cb9-5" data-line-number="5"><span class="co">#&gt; [1] 0.005069378</span></a>
+<a class="sourceLine" id="cb9-6" data-line-number="6"><span class="kw">emp_kl_div</span>(true_dat, rep_composite, <span class="kw">c</span>(<span class="st">&quot;sex&quot;</span>), <span class="kw">c</span>(<span class="st">&quot;income&quot;</span>, <span class="st">&quot;bp&quot;</span>))</a>
+<a class="sourceLine" id="cb9-7" data-line-number="7"><span class="co">#&gt; [1] 0.0563834</span></a>
+<a class="sourceLine" id="cb9-8" data-line-number="8"><span class="kw">emp_kl_div</span>(true_dat, rep_pp_thresh, <span class="kw">c</span>(<span class="st">&quot;sex&quot;</span>), <span class="kw">c</span>(<span class="st">&quot;income&quot;</span>, <span class="st">&quot;bp&quot;</span>))</a>
+<a class="sourceLine" id="cb9-9" data-line-number="9"><span class="co">#&gt; [1] 0.004226951</span></a></code></pre></div>
+<p>The representative dataset based on the posterior prototyping weights is the closest to the truth using the three variables we might be interested in using for regression. This might indicate that we should use this representation in a downstream model, like linear regression.</p>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1>References</h1>
+<div id="refs" class="references">
+<div id="ref-binette2020almost">
+<p>Binette, Olivier, and Rebecca C Steorts. “(Almost) All of Entity Resolution.” <em>arXiv Preprint arXiv:2008.04443</em>. <a href="https://arxiv.org/abs/2008.04443">https://arxiv.org/abs/2008.04443</a>.</p>
+</div>
+<div id="ref-kaplan2018posterior">
+<p>Kaplan, Andee, Brenda Betancourt, and Rebecca C. Steorts. “Posterior Prototyping: Bridging the Gap Between Record Linkage and Regression.” <em>arXiv Preprint arXiv:1810.01538</em>. <a href="https://arxiv.org/abs/1810.01538">https://arxiv.org/abs/1810.01538</a>.</p>
+</div>
+<div id="ref-marchant2020d">
+<p>Marchant, Neil G, Andee Kaplan, Daniel N Elazar, Benjamin IP Rubinstein, and Rebecca C Steorts. 2020. “D-Blink: Distributed End-to-End Bayesian Entity Resolution.” <em>Journal of Computational and Graphical Statistics</em> just-accepted. Taylor &amp; Francis: 1–42.</p>
+</div>
+<div id="ref-steorts2015entity">
+<p>Steorts, Rebecca C. 2015. “Entity Resolution with Empirically Motivated Priors.” <em>Bayesian Analysis</em> 10 (4). International Society for Bayesian Analysis: 849–75.</p>
+</div>
+<div id="ref-blink">
+<p>———. “Blink: Record Linkage for Empirically Motivated Priors.” <a href="https://CRAN.R-project.org/package=blink">https://CRAN.R-project.org/package=blink</a>.</p>
+</div>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
