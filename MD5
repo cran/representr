@@ -1,11 +1,11 @@
-46df2f2b6501f418f32db4cc9ce915c8 *DESCRIPTION
+2a34d7c1a66ab4931ae16e8685092367 *DESCRIPTION
 3bbc6e5bfc15a47de60738b4eb5a92f7 *NAMESPACE
-5f337aa486677c0f4b0e474d13e30ff2 *NEWS.md
+21df20c7979bf34be74559b655eb3369 *NEWS.md
 9b904caa030b888af99d10451a6be4c6 *R/clust_comp.R
 271d3446730ac3d600607f3c8c2a27da *R/clust_proto.R
 ffaa058e0a8934418acb1b3eccf14bcd *R/emp_kl.R
 8fd49c12547c11533e31a63ad75d5878 *R/pp_weights.R
-91c4455f2523bb0bef964d71e6d372b9 *R/record_distance.R
+989c626074ff64558605554bb2b22c34 *R/record_distance.R
 63df30229f4151fefc4eb2714a11b8ae *R/represent.R
 9532394a70f886e542f42754701c5c54 *R/representr.R
 b9981903d8703b91810dc46addfda06b *R/rl_reg.R
@@ -20,7 +20,7 @@ ba5c21d2baf1919f60085dad5cab6241 *data/rl_reg2.RData
 0eb503184e64c529e341387d697f2ad1 *data/rl_reg5.RData
 4ea3b7863eab3aae21f8db5ad0fc6efb *inst/doc/representr.R
 4450fe9cb624c7882c0527db410928e6 *inst/doc/representr.Rmd
-923552f2ef87070089d9a5f67a952061 *inst/doc/representr.html
+aff0de072bf13600a853c12f4971cb1c *inst/doc/representr.html
 57aa8e20c04addf5fab2d599a5b3fdd2 *inst/extdata/clean_data.R
 c49d639c899351fdd3251a511dadec47 *inst/extdata/rl_reg1_raw.RData
 30d37c667664533a81aa5306ace2d67c *inst/extdata/rl_reg2_raw.RData
