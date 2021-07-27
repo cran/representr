@@ -9,9 +9,8 @@ library(ggplot2)
 set.seed(1234)
 
 ## ----ex-records---------------------------------------------------------------
-# load libraries
+# load library
 library(representr)
-library(stringdist)
 
 # load data
 data("rl_reg1") # data for record linkage and regression
@@ -19,45 +18,6 @@ data("identity.rl_reg1") # true identity of each record
 
 ## ----echo = FALSE-------------------------------------------------------------
 knitr::kable(head(rl_reg1))
-
-## ----rl, results='hide'-------------------------------------------------------
-# load blink
-library(blink)
-
-# params for running record linkage
-a <- 1; b <- 99 # distortion hyperparams
-c <- 1 # string density hyperparams
-d <- function(string1, string2){ #jaro-winkler string distance
-  n1 <- length(string1)
-  n2 <- length(string2)
-  res <- matrix(NA, n1, n2)
-  for(i in seq_len(n1)) {
-    for(j in seq_len(n2)) {
-      res[i, j] <- stringdist(string1[i], string2[j], method = "jw")
-    }
-  } 
-  res
-}  # vector string distance function
-num.gs <- 10 # number of iterations
-M <- nrow(rl_reg1) # upper bound on number of entities
-str_idx <- c(1, 2) # string columns
-cat_idx <- c(3, 4, 5) # categorical columns
-
-# data prep 
-# X.c contains the categorical variables
-# X.s contains the string variables 
-X.c <- apply(as.matrix(rl_reg1[, cat_idx]), 2, as.character)
-X.s <- as.matrix(rl_reg1[, str_idx])
-
-# X.c and X.s include all files "stacked" on top of each other.
-# The vector below keeps track of which rows of X.c and X.s are in which files.
-file.num <- rep(1, nrow(rl_reg1))
-
-# perform record linkage  
-linkage.rl <- rl.gibbs(file.num, X.s, X.c, num.gs=num.gs, a=a, b=b, c=c, d=d, M=M)
-
-## ----delete-blink-res, echo=FALSE, results="hide"-----------------------------
-file.remove(dir(path = ".", pattern="lambda*") )
 
 ## -----------------------------------------------------------------------------
 data("linkage.rl")
