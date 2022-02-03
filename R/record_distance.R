@@ -38,11 +38,11 @@ dist_binary <- function(a, b) {
 #'     "High school graduates, no college", "Some college or associate degree",
 #'     "Bachelor's degree only", "Advanced degree"))
 #'
-#' dist_col_type(rl_reg1[1,], rl_reg1[2,], col_type = type, order = order)
+#' dist_col_type_slow(rl_reg1[1,], rl_reg1[2,], col_type = type, order = order)
 #'
 #' @importFrom utils adist
 #' @export
-dist_col_type <- function(a, b, col_type, string_dist = utils::adist, weights = rep(1/length(a), length(a)), orders = NULL, ...) {
+dist_col_type_slow <- function(a, b, col_type, string_dist = utils::adist, weights = rep(1/length(a), length(a)), orders = NULL, ...) {
   ## noLD checks
   eps <- ifelse(capabilities("long.double"), sqrt(.Machine$double.eps), 0.1)
 
@@ -70,7 +70,6 @@ dist_col_type <- function(a, b, col_type, string_dist = utils::adist, weights = 
     }
   }
 
-
   ## combine all column type distances
   p <- length(a)
   dist <- 0
@@ -89,5 +88,6 @@ dist_col_type <- function(a, b, col_type, string_dist = utils::adist, weights = 
       # string: weighted string distance
       dist <- dist + weights[i]*string_dist(as.character(a[[i]]), as.character(b[[i]]), ...)
   }
+
   return(dist)
 }

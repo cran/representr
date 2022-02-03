@@ -2,12 +2,12 @@
 % Please edit documentation in R/record_distance.R
 \name{dist_binary}
 \alias{dist_binary}
-\alias{dist_col_type}
+\alias{dist_col_type_slow}
 \title{The distance between two records}
 \usage{
 dist_binary(a, b)
 
-dist_col_type(
+dist_col_type_slow(
   a,
   b,
   col_type,
@@ -54,6 +54,6 @@ order <- list(education = c("Less than a high school diploma",
     "High school graduates, no college", "Some college or associate degree",
     "Bachelor's degree only", "Advanced degree"))
 
-dist_col_type(rl_reg1[1,], rl_reg1[2,], col_type = type, order = order)
+dist_col_type_slow(rl_reg1[1,], rl_reg1[2,], col_type = type, order = order)
 
 }
