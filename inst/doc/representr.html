@@ -12,11 +12,23 @@
 
 <meta name="author" content="Andee Kaplan and Rebecca C. Steorts" />
 
-<meta name="date" content="2022-02-03" />
+<meta name="date" content="2022-10-18" />
 
 <title>Prototyping with representr</title>
 
-<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -26,6 +38,7 @@
   div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
   ul.task-list{list-style: none;}
     </style>
+
 
 
 <style type="text/css">
@@ -109,13 +122,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   for (var i = 0; i < sheets.length; i++) {
     if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
     try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
+    var j = 0;
+    while (j < rules.length) {
       var rule = rules[j];
       // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -149,7 +169,187 @@ div.csl-indent {
 }
 </style>
 
-<link rel="stylesheet" href="data:text/css,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
 
 
 
@@ -161,23 +361,48 @@ div.csl-indent {
 
 
 
-<h1 class="title toc-ignore">Prototyping with <code>representr</code></h1>
+<h1 class="title toc-ignore">Prototyping with
+<code>representr</code></h1>
 <h4 class="author">Andee Kaplan and Rebecca C. Steorts</h4>
-<h4 class="date">2022-02-03</h4>
+<h4 class="date">2022-10-18</h4>
 
 
 
 <div id="background-and-motivating-example" class="section level1">
 <h1>Background and Motivating Example</h1>
-<p>Record linkage (entity resolution or de-duplication) is used to join multiple databases to remove duplicate entities. While record linkage removes the duplicate entities from the data, many researchers are interested in performing inference, prediction, or post-linkage analysis on the linked data (e.g., regression or capture-recapture), which we call the <em>downstream task</em>. Depending on the downstream task, one may wish to find the most representative record before performing the post-linkage analysis. For example, when the values of features used in a downstream task differ for linked data, which values should be used? This is where <code>representr</code> comes in. Before introducing our new package <code>representr</code> from the paper <span class="citation">Kaplan, Betancourt, and Steorts (n.d.)</span>, we first provide an introduction to record linkage.</p>
-<p>Throughout this vignette, we will use data that is available in the <code>representr</code> package, <code>rl_reg1</code> (rl = record linkage, reg = regression, 1 = amount of noisiness).</p>
+<p>Record linkage (entity resolution or de-duplication) is used to join
+multiple databases to remove duplicate entities. While record linkage
+removes the duplicate entities from the data, many researchers are
+interested in performing inference, prediction, or post-linkage analysis
+on the linked data (e.g., regression or capture-recapture), which we
+call the <em>downstream task</em>. Depending on the downstream task, one
+may wish to find the most representative record before performing the
+post-linkage analysis. For example, when the values of features used in
+a downstream task differ for linked data, which values should be used?
+This is where <code>representr</code> comes in. Before introducing our
+new package <code>representr</code> from the paper <span class="citation">Kaplan, Betancourt, and Steorts (n.d.)</span>, we first
+provide an introduction to record linkage.</p>
+<p>Throughout this vignette, we will use data that is available in the
+<code>representr</code> package, <code>rl_reg1</code> (rl = record
+linkage, reg = regression, 1 = amount of noisiness).</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load library</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(representr)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># load data</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;rl_reg1&quot;</span>) <span class="co"># data for record linkage and regression</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;identity.rl_reg1&quot;</span>) <span class="co"># true identity of each record</span></span></code></pre></div>
-<table>
+<table style="width:100%;">
+<colgroup>
+<col width="10%" />
+<col width="15%" />
+<col width="3%" />
+<col width="3%" />
+<col width="6%" />
+<col width="4%" />
+<col width="41%" />
+<col width="8%" />
+<col width="4%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th align="left">fname</th>
@@ -260,7 +485,8 @@ div.csl-indent {
 </tr>
 </tbody>
 </table>
-<p>This is simulated data, which consists of 500 records with 30% duplication and the following attributes:</p>
+<p>This is simulated data, which consists of 500 records with 30%
+duplication and the following attributes:</p>
 <ul>
 <li><code>fname</code>: First name</li>
 <li><code>lname</code>: Last name</li>
@@ -268,13 +494,22 @@ div.csl-indent {
 <li><code>bd</code>: Birth day</li>
 <li><code>by</code>: Birth year</li>
 <li><code>sex</code>: Sex (“M” or “F”)</li>
-<li><code>education</code>: Education level (“Less than a high school diploma,” &quot;“High school graduates, no college,” “Some college or associate degree,” “Bachelor’s degree only,” or “Advanced degree”)</li>
+<li><code>education</code>: Education level (“Less than a high school
+diploma”, ““High school graduates, no college”, “Some college or
+associate degree”, “Bachelor’s degree only”, or “Advanced degree”)</li>
 <li><code>income</code>: Yearly income (in $1000s)</li>
 <li><code>bp</code>: Systolic blood pressure</li>
 </ul>
 <div id="record-linkage" class="section level2">
 <h2>Record linkage</h2>
-<p>Before we perform prototyping to get a representative data set using <code>representr</code>, we must first perform record linkage to remove duplication in the data set. In the absence of unique identifier (such as a social security number), we can use probabilistic methods to perform record linkage. We recommend the use of clustering records to a latent entity, known in the literature as graphical entity resolution. See <span class="citation">(Binette and Steorts, n.d.)</span> for a review.</p>
+<p>Before we perform prototyping to get a representative data set using
+<code>representr</code>, we must first perform record linkage to remove
+duplication in the data set. In the absence of unique identifier (such
+as a social security number), we can use probabilistic methods to
+perform record linkage. We recommend the use of clustering records to a
+latent entity, known in the literature as graphical entity resolution.
+See <span class="citation">(Binette and Steorts, n.d.)</span> for a
+review.</p>
 <!-- For the examples in this vignette, we will use `blink` [@blink],a Bayesian record linkage model [@steorts2015entity]. For this example, we will run only a small number of iterations, which will certainly not have converged. For a faster (more scalable version of this), we recommend recent work of [@marchant2020d] using either dblink or dblinkR.  -->
 <!-- For a real example, we would want to let this model run longer. -->
 <!-- ```{r rl, results='hide'} -->
@@ -301,13 +536,40 @@ div.csl-indent {
 <!-- ```{r delete-blink-res, echo=FALSE, results="hide"} -->
 <!-- file.remove(dir(path = ".", pattern="lambda*") ) -->
 <!-- ``` -->
-<p>For the examples in this vignette, we have fit the model in recent work of <span class="citation">(N. G. Marchant et al. 2020)</span> using <code>dblinkR</code> <span class="citation">(N. Marchant 2021)</span>. Please see associated vignette for details on using <code>dblinkR</code>. We load the results of running this record linkage model for <span class="math inline">\(100,000\)</span> iterations, which have been stored in the package as a data object called <code>linkage.rl</code>.</p>
+<p>For the examples in this vignette, we have fit the model in recent
+work of <span class="citation">(N. G. Marchant et al. 2020)</span> using
+<code>dblinkR</code> <span class="citation">(N. Marchant 2021)</span>.
+Please see associated vignette for details on using
+<code>dblinkR</code>. We load the results of running this record linkage
+model for <span class="math inline">\(100,000\)</span> iterations, which
+have been stored in the package as a data object called
+<code>linkage.rl</code>.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;linkage.rl&quot;</span>)</span></code></pre></div>
 </div>
 <div id="the-downstream-task" class="section level2">
 <h2>The Downstream Task</h2>
-<p>After record linkage is complete, one may want to perform analyses of the linked data. This is what we call the “downstream task.” As motivation, consider modeling blood pressure (bp) using the following two features (covariates): income and sex in our example data <code>rl_reg1</code>. We want to fit this model after performing record linkage using the following features: first and last name and full data of birth. Here is an example of four records that represent the same individual (based on the results from record linkage) using data that is in the <code>representr</code> package.</p>
+<p>After record linkage is complete, one may want to perform analyses of
+the linked data. This is what we call the “downstream task”. As
+motivation, consider modeling blood pressure (bp) using the following
+two features (covariates): income and sex in our example data
+<code>rl_reg1</code>. We want to fit this model after performing record
+linkage using the following features: first and last name and full data
+of birth. Here is an example of four records that represent the same
+individual (based on the results from record linkage) using data that is
+in the <code>representr</code> package.</p>
 <table>
+<colgroup>
+<col width="5%" />
+<col width="9%" />
+<col width="7%" />
+<col width="3%" />
+<col width="3%" />
+<col width="6%" />
+<col width="5%" />
+<col width="44%" />
+<col width="9%" />
+<col width="5%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th align="left"></th>
@@ -373,21 +635,52 @@ div.csl-indent {
 </tr>
 </tbody>
 </table>
-<p>Examination of this table raises important questions that need to be addressed before performing a particular downstream task, such as which values of bp, income, and sex should be used as the representative features (or covariates) in a regression model? In this vignette, we will provide multiple solutions to this question using a prototyping approach.</p>
+<p>Examination of this table raises important questions that need to be
+addressed before performing a particular downstream task, such as which
+values of bp, income, and sex should be used as the representative
+features (or covariates) in a regression model? In this vignette, we
+will provide multiple solutions to this question using a prototyping
+approach.</p>
 </div>
 </div>
 <div id="prototyping-methods" class="section level1">
 <h1>Prototyping methods</h1>
-<p>We have four methods to choose or create the representative record from linked data included in <code>representr</code>. This process is a function of the data and the linkage structure, and we present both probabilistic and deterministic functions. The result in all cases is a representative data set to be passed on to the downstream task. The prototyping is completed using the <code>represent()</code> function.</p>
+<p>We have four methods to choose or create the representative record
+from linked data included in <code>representr</code>. This process is a
+function of the data and the linkage structure, and we present both
+probabilistic and deterministic functions. The result in all cases is a
+representative data set to be passed on to the downstream task. The
+prototyping is completed using the <code>represent()</code>
+function.</p>
 <div id="random-prototyping" class="section level2">
 <h2>Random Prototyping</h2>
-<p>Our first proposal to choose a representative record (<em>prototype</em>) for a cluster is the simplest and serves as a baseline or benchmark. One simply chooses the representative record uniformly at random or using a more informed distribution.</p>
-<p>For demonstration purposes, we can create a representative dataset using the last iteration of the results from running the record linkage model using <code>blink</code>. This is accomplished using the <code>represent()</code> function, and passing through the type of prototyping to be <code>proto_random</code>.</p>
+<p>Our first proposal to choose a representative record
+(<em>prototype</em>) for a cluster is the simplest and serves as a
+baseline or benchmark. One simply chooses the representative record
+uniformly at random or using a more informed distribution.</p>
+<p>For demonstration purposes, we can create a representative dataset
+using the last iteration of the results from running the record linkage
+model using <code>blink</code>. This is accomplished using the
+<code>represent()</code> function, and passing through the type of
+prototyping to be <code>proto_random</code>.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ids for representative records (random)</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>random_id <span class="ot">&lt;-</span> <span class="fu">represent</span>(rl_reg1, lambda, <span class="st">&quot;proto_random&quot;</span>, <span class="at">parallel =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>rep_random <span class="ot">&lt;-</span> rl_reg1[random_id,] <span class="co"># representative records (random)</span></span></code></pre></div>
-<p>We can have a look at a few records chosen as representative in this way.</p>
-<table>
+<p>We can have a look at a few records chosen as representative in this
+way.</p>
+<table style="width:100%;">
+<colgroup>
+<col width="4%" />
+<col width="11%" />
+<col width="16%" />
+<col width="3%" />
+<col width="3%" />
+<col width="5%" />
+<col width="4%" />
+<col width="38%" />
+<col width="7%" />
+<col width="4%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th align="left"></th>
@@ -468,12 +761,30 @@ div.csl-indent {
 </div>
 <div id="minimax-prototyping" class="section level2">
 <h2>Minimax Prototyping</h2>
-<p>Our second proposal to choose a representative record is to select the record that “most closely captures” that of the latent entity. Of course, this is quite subjective. We propose selecting the record whose farthest neighbors within the cluster is closest, where closeness is measured by a record distance function, <span class="math inline">\(d_r(\cdot)\)</span>. We can write this as the record <span class="math inline">\(r = (i, j)\)</span> within each cluster <span class="math inline">\(\Lambda_{j&#39;}\)</span> such that <span class="math display">\[
-r = \arg\min\limits_{(i, j) \in \Lambda_{j&#39;}} \max\limits_{(i^*, j^*) \in \Lambda_{j&#39;}} d_r((i, j), (i^*, j^*)).
-\]</span> The result is a set of representative records, one for each latent individual, that is closest to the other records in each cluster. When there is a tie within the cluster, we select a record uniformly at random.</p>
-<p>There are many distance functions that can be used for <span class="math inline">\(d_r(\cdot, \cdot)\)</span>. We define the distance function to be a weighted average of individual variable-level distances that depend on the column type. Given two records, <span class="math inline">\((i, j)\)</span> and <span class="math inline">\((i*, j*)\)</span>, we use a weighted average of column-wise distances (based on the column type) to produce the following single distance metric: <span class="math display">\[
-d_r((i, j), (i*, j*)) = \sum\limits_{\ell = 1}^p w_\ell d_{r\ell}((i, j), (i^*, j^*)),
-\]</span> where <span class="math inline">\(\sum\limits_{\ell = 1}^p w_\ell = 1\)</span>. The column-wise distance functions <span class="math inline">\(d_{r\ell}(\cdot, \cdot)\)</span> we use are presented below.</p>
+<p>Our second proposal to choose a representative record is to select
+the record that “most closely captures” that of the latent entity. Of
+course, this is quite subjective. We propose selecting the record whose
+farthest neighbors within the cluster is closest, where closeness is
+measured by a record distance function, <span class="math inline">\(d_r(\cdot)\)</span>. We can write this as the
+record <span class="math inline">\(r = (i, j)\)</span> within each
+cluster <span class="math inline">\(\Lambda_{j&#39;}\)</span> such that
+<span class="math display">\[
+r = \arg\min\limits_{(i, j) \in \Lambda_{j&#39;}} \max\limits_{(i^*,
+j^*) \in \Lambda_{j&#39;}} d_r((i, j), (i^*, j^*)).
+\]</span> The result is a set of representative records, one for each
+latent individual, that is closest to the other records in each cluster.
+When there is a tie within the cluster, we select a record uniformly at
+random.</p>
+<p>There are many distance functions that can be used for <span class="math inline">\(d_r(\cdot, \cdot)\)</span>. We define the distance
+function to be a weighted average of individual variable-level distances
+that depend on the column type. Given two records, <span class="math inline">\((i, j)\)</span> and <span class="math inline">\((i*, j*)\)</span>, we use a weighted average of
+column-wise distances (based on the column type) to produce the
+following single distance metric: <span class="math display">\[
+d_r((i, j), (i*, j*)) = \sum\limits_{\ell = 1}^p w_\ell d_{r\ell}((i,
+j), (i^*, j^*)),
+\]</span> where <span class="math inline">\(\sum\limits_{\ell = 1}^p
+w_\ell = 1\)</span>. The column-wise distance functions <span class="math inline">\(d_{r\ell}(\cdot, \cdot)\)</span> we use are
+presented below.</p>
 <table>
 <colgroup>
 <col width="16%" />
@@ -492,20 +803,32 @@ d_r((i, j), (i*, j*)) = \sum\limits_{\ell = 1}^p w_\ell d_{r\ell}((i, j), (i^*, 
 </tr>
 <tr class="even">
 <td align="left">Numeric</td>
-<td>Absolute distance, <span class="math inline">\(d_{r\ell}((i, j), (i^*, j^*)) = \mid x_{ij\ell} - x_{i^*j^*\ell} \mid\)</span></td>
+<td>Absolute distance, <span class="math inline">\(d_{r\ell}((i, j),
+(i^*, j^*)) = \mid x_{ij\ell} - x_{i^*j^*\ell} \mid\)</span></td>
 </tr>
 <tr class="odd">
 <td align="left">Categorical</td>
-<td>Binary distance, <span class="math inline">\(d_{r\ell}((i, j), (i^*, j^*)) = \mathbb{I}(x_{ij\ell} != x_{i^*j^*\ell})\)</span></td>
+<td>Binary distance, <span class="math inline">\(d_{r\ell}((i, j), (i^*,
+j^*)) = \mathbb{I}(x_{ij\ell} != x_{i^*j^*\ell})\)</span></td>
 </tr>
 <tr class="even">
 <td align="left">Ordinal</td>
-<td>Absolute distance between levels. Let <span class="math inline">\(\gamma(x_{ij\ell})\)</span> be the order of the value <span class="math inline">\(x_{ij\ell}\)</span>, then <span class="math inline">\(d_{r\ell}((i, j), (i^*, j^*)) = \mid \gamma(x_{ij\ell}) - \gamma(x_{i^*j^*\ell}) \mid\)</span></td>
+<td>Absolute distance between levels. Let <span class="math inline">\(\gamma(x_{ij\ell})\)</span> be the order of the
+value <span class="math inline">\(x_{ij\ell}\)</span>, then <span class="math inline">\(d_{r\ell}((i, j), (i^*, j^*)) = \mid
+\gamma(x_{ij\ell}) - \gamma(x_{i^*j^*\ell}) \mid\)</span></td>
 </tr>
 </tbody>
 </table>
-<p>The weighting of variable distances is used to place importance on individual features according to prior knowledge of the data set and to scale the feature distances to a common range. In this vignette, we scale all column-wise distances to be values between <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span>.</p>
-<p>Again, we can create a representative dataset using the last iteration of the results from running the record linkage model using <code>blink</code>. But this time we need to specify some more parameters, like what types the columns are. This is accomplished using the <code>represent()</code> function, and passing through the type of prototyping to be <code>proto_minimax</code>.</p>
+<p>The weighting of variable distances is used to place importance on
+individual features according to prior knowledge of the data set and to
+scale the feature distances to a common range. In this vignette, we
+scale all column-wise distances to be values between <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span>.</p>
+<p>Again, we can create a representative dataset using the last
+iteration of the results from running the record linkage model using
+<code>blink</code>. But this time we need to specify some more
+parameters, like what types the columns are. This is accomplished using
+the <code>represent()</code> function, and passing through the type of
+prototyping to be <code>proto_minimax</code>.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># additional parameters for minimax prototyping</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># need column types, the order levels for any ordinal variables, and column weights</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>col_type <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;string&quot;</span>, <span class="st">&quot;string&quot;</span>, <span class="st">&quot;numeric&quot;</span>, <span class="st">&quot;numeric&quot;</span>, <span class="st">&quot;numeric&quot;</span>, <span class="st">&quot;categorical&quot;</span>, <span class="st">&quot;ordinal&quot;</span>, <span class="st">&quot;numeric&quot;</span>, <span class="st">&quot;numeric&quot;</span>)</span>
@@ -517,8 +840,21 @@ d_r((i, j), (i*, j*)) = \sum\limits_{\ell = 1}^p w_\ell d_{r\ell}((i, j), (i^*, 
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                        <span class="at">distance =</span> dist_col_type, <span class="at">col_type =</span> col_type, </span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>                        <span class="at">weights =</span> weights, <span class="at">orders =</span> orders, <span class="at">scale =</span> <span class="cn">TRUE</span>, <span class="at">parallel =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>rep_minimax <span class="ot">&lt;-</span> rl_reg1[minimax_id,] <span class="co"># representative records (minimax)</span></span></code></pre></div>
-<p>We can have a look at some of the representative records chosen via minimax prototyping.</p>
+<p>We can have a look at some of the representative records chosen via
+minimax prototyping.</p>
 <table>
+<colgroup>
+<col width="4%" />
+<col width="10%" />
+<col width="13%" />
+<col width="3%" />
+<col width="3%" />
+<col width="6%" />
+<col width="4%" />
+<col width="39%" />
+<col width="8%" />
+<col width="4%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th align="left"></th>
@@ -599,11 +935,34 @@ d_r((i, j), (i*, j*)) = \sum\limits_{\ell = 1}^p w_\ell d_{r\ell}((i, j), (i^*, 
 </div>
 <div id="composite-records" class="section level2">
 <h2>Composite Records</h2>
-<p>Our third proposal to choose a representative record is by aggregating the records (in each cluster) to form a composite record that includes information from each linked record. The form of aggregation can depend on the column type, and the aggregation itself can be weighted by some prior knowledge of the data sources or use the posterior information from the record linkage model. For quantitative variables, we use a weighted arithmetic mean to combine linked values, whereas for categorical variables, a weighted majority vote is used. For string variables, we use a weighted majority vote for each character, which allows for noisy strings to differ on a continuum. This is accomplished using the <code>represent()</code> function, and passing through the type of prototyping to be <code>composite</code>.</p>
+<p>Our third proposal to choose a representative record is by
+aggregating the records (in each cluster) to form a composite record
+that includes information from each linked record. The form of
+aggregation can depend on the column type, and the aggregation itself
+can be weighted by some prior knowledge of the data sources or use the
+posterior information from the record linkage model. For quantitative
+variables, we use a weighted arithmetic mean to combine linked values,
+whereas for categorical variables, a weighted majority vote is used. For
+string variables, we use a weighted majority vote for each character,
+which allows for noisy strings to differ on a continuum. This is
+accomplished using the <code>represent()</code> function, and passing
+through the type of prototyping to be <code>composite</code>.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># representative records (composite)</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>rep_composite <span class="ot">&lt;-</span> <span class="fu">represent</span>(rl_reg1, linkage.rl[<span class="fu">nrow</span>(linkage.rl),], <span class="st">&quot;composite&quot;</span>, <span class="at">col_type =</span> col_type, <span class="at">parallel =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 <p>We can have a look at some of the representative records.</p>
-<table>
+<table style="width:100%;">
+<colgroup>
+<col width="4%" />
+<col width="10%" />
+<col width="16%" />
+<col width="3%" />
+<col width="5%" />
+<col width="5%" />
+<col width="4%" />
+<col width="37%" />
+<col width="7%" />
+<col width="4%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th align="left"></th>
@@ -684,24 +1043,62 @@ d_r((i, j), (i*, j*)) = \sum\limits_{\ell = 1}^p w_\ell d_{r\ell}((i, j), (i^*, 
 </div>
 <div id="posterior-prototyping" class="section level2">
 <h2>Posterior Prototyping</h2>
-<p>Our fourth proposal to choose a representative record utilizes the minimax prototyping method in a fully Bayesian setting. This is desirable as the posterior distribution of the linkage is used to weight the downstream tasks, which allows the error from the record linkage task to be naturally propagated into the downstream task.</p>
-<p>We propose two methods for utilizing the posterior prototyping (PP) weights — a weighted downstream task and a thresholded representative data set based on the weights. As already mentioned, PP weights naturally propagate the linkage error into the downstream task, which we now explain. For each MCMC iteration from the Bayesian record linkage model, we obtain the most representative records using minimax prototyping and then compute the probability of each record being selected over all MCMC iterations. The posterior prototyping (PP) probabilities can then either be used as weights for each record in the regression or as a thresholded variant where we only include records whose PP weights are above <span class="math inline">\(0.5\)</span>. Note that a record with PP weight above 0.5 has a posterior probability greater than 0.5 of being chosen as a prototype and should be included in the final data set.</p>
+<p>Our fourth proposal to choose a representative record utilizes the
+minimax prototyping method in a fully Bayesian setting. This is
+desirable as the posterior distribution of the linkage is used to weight
+the downstream tasks, which allows the error from the record linkage
+task to be naturally propagated into the downstream task.</p>
+<p>We propose two methods for utilizing the posterior prototyping (PP)
+weights — a weighted downstream task and a thresholded representative
+data set based on the weights. As already mentioned, PP weights
+naturally propagate the linkage error into the downstream task, which we
+now explain. For each MCMC iteration from the Bayesian record linkage
+model, we obtain the most representative records using minimax
+prototyping and then compute the probability of each record being
+selected over all MCMC iterations. The posterior prototyping (PP)
+probabilities can then either be used as weights for each record in the
+regression or as a thresholded variant where we only include records
+whose PP weights are above <span class="math inline">\(0.5\)</span>.
+Note that a record with PP weight above 0.5 has a posterior probability
+greater than 0.5 of being chosen as a prototype and should be included
+in the final data set.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Posterior prototyping weights</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>pp_weights <span class="ot">&lt;-</span> <span class="fu">pp_weights</span>(rl_reg1, linkage.rl[<span class="fu">seq</span>(<span class="dv">80000</span>, <span class="dv">100000</span>, <span class="at">by =</span> <span class="dv">100</span>), ], </span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                         <span class="st">&quot;proto_minimax&quot;</span>, <span class="at">distance =</span> dist_col_type, </span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                         <span class="at">col_type =</span> col_type, <span class="at">weights =</span> weights, <span class="at">orders =</span> orders, </span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                         <span class="at">scale =</span> <span class="cn">TRUE</span>, <span class="at">parallel =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
-<p>We can look at the minimax PP weights distribution for the true and duplicated records in the data set as an example. Note that the true records consistently have higher PP weights and the proportion of duplicated records with high weights is relatively low.</p>
+<p>We can look at the minimax PP weights distribution for the true and
+duplicated records in the data set as an example. Note that the true
+records consistently have higher PP weights and the proportion of
+duplicated records with high weights is relatively low.</p>
 <div class="figure" style="text-align: center">
 <img src="data:image/png;base64,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" alt="The distribution of PP weights as generated from posterior draws of $\boldsymbol \Lambda$ colored by if they are true or duplicated records in the original data set. The dotted vertical line shows the threshold value of 0.5. The true records have consistently higher PP weights and the proportion of duplicated records with high weights is relatively low." />
 <p class="caption">
-The distribution of PP weights as generated from posterior draws of <span class="math inline">\(\boldsymbol \Lambda\)</span> colored by if they are true or duplicated records in the original data set. The dotted vertical line shows the threshold value of 0.5. The true records have consistently higher PP weights and the proportion of duplicated records with high weights is relatively low.
+The distribution of PP weights as generated from posterior draws of
+<span class="math inline">\(\boldsymbol \Lambda\)</span> colored by if
+they are true or duplicated records in the original data set. The dotted
+vertical line shows the threshold value of 0.5. The true records have
+consistently higher PP weights and the proportion of duplicated records
+with high weights is relatively low.
 </p>
 </div>
-<p>We can make a representative dataset with these weights by using the cutoff of <span class="math inline">\(0.5\)</span>, and look at some of the records.</p>
+<p>We can make a representative dataset with these weights by using the
+cutoff of <span class="math inline">\(0.5\)</span>, and look at some of
+the records.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># representative records (PP threshold)</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>rep_pp_thresh <span class="ot">&lt;-</span> rl_reg1[pp_weights <span class="sc">&gt;</span> .<span class="dv">5</span>, ]</span></code></pre></div>
-<table>
+<table style="width:100%;">
+<colgroup>
+<col width="10%" />
+<col width="15%" />
+<col width="3%" />
+<col width="3%" />
+<col width="6%" />
+<col width="4%" />
+<col width="41%" />
+<col width="8%" />
+<col width="4%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th align="left">fname</th>
@@ -784,15 +1181,44 @@ The distribution of PP weights as generated from posterior draws of <span class=
 </tr>
 </tbody>
 </table>
-<p>These four proposed methods each have potential benefits. The goal of prototyping is to select the correct representations of latent entities as often as possible; however, uniform random selection has no means to achieve this goal. Turning to minimax selection, if a distance function can accurately reflect the distance between pairs of records in the data set, then this method may perform well. Alternatively, composite records necessarily alter the data for all entities with multiple copies in the data, affecting some downstream tasks (like linear regression) heavily. The ability of posterior prototyping to propagate record linkage error to the downstream task is an attractive feature and a great strength of the Bayesian paradigm. In addition, the ability to use the entire posterior distribution of the linkage structure also poses the potential for superior downstream performance.</p>
+<p>These four proposed methods each have potential benefits. The goal of
+prototyping is to select the correct representations of latent entities
+as often as possible; however, uniform random selection has no means to
+achieve this goal. Turning to minimax selection, if a distance function
+can accurately reflect the distance between pairs of records in the data
+set, then this method may perform well. Alternatively, composite records
+necessarily alter the data for all entities with multiple copies in the
+data, affecting some downstream tasks (like linear regression) heavily.
+The ability of posterior prototyping to propagate record linkage error
+to the downstream task is an attractive feature and a great strength of
+the Bayesian paradigm. In addition, the ability to use the entire
+posterior distribution of the linkage structure also poses the potential
+for superior downstream performance.</p>
 </div>
 </div>
 <div id="evaluation" class="section level1">
 <h1>Evaluation</h1>
-<p>We can evaluate the performance of our methods by assessing the distributional closeness of the representative dataset to the true records. The distributional closeness of the representative datasets to the true records is useful because one of the benefits of using a two-stage approach to record linkage and downstream analyses is the ability to perform multiple analyses with the same data set. As such, downstream performance of representative records may be dependent on the type of downstream task that is being performed. In order to assess the distributional closeness of the representative data sets to the truth, we use an empirical Kullback-Leibler (KL) divergence metric. Let <span class="math inline">\(\hat{F}_{rep}(\boldsymbol x)\)</span> and <span class="math inline">\(\hat{F}_{true}(\boldsymbol x)\)</span> be the empirical distribution functions for the representative data set and true data set, respectively (with continuous variables transformed to categorical using a histogram approach with statistically equivalent data-dependent bins). The empirical KL divergence metric we use is then defined as <span class="math display">\[
-\hat{D}_{KL}(\hat{F}_{rep} || \hat{F}_{true}) = \sum_{\boldsymbol x} \hat{F}_{rep}(\boldsymbol x) \log\left(\frac{\hat{F}_{rep}(\boldsymbol x)}{\hat{F}_{true}(\boldsymbol x)}\right).
+<p>We can evaluate the performance of our methods by assessing the
+distributional closeness of the representative dataset to the true
+records. The distributional closeness of the representative datasets to
+the true records is useful because one of the benefits of using a
+two-stage approach to record linkage and downstream analyses is the
+ability to perform multiple analyses with the same data set. As such,
+downstream performance of representative records may be dependent on the
+type of downstream task that is being performed. In order to assess the
+distributional closeness of the representative data sets to the truth,
+we use an empirical Kullback-Leibler (KL) divergence metric. Let <span class="math inline">\(\hat{F}_{rep}(\boldsymbol x)\)</span> and <span class="math inline">\(\hat{F}_{true}(\boldsymbol x)\)</span> be the
+empirical distribution functions for the representative data set and
+true data set, respectively (with continuous variables transformed to
+categorical using a histogram approach with statistically equivalent
+data-dependent bins). The empirical KL divergence metric we use is then
+defined as <span class="math display">\[
+\hat{D}_{KL}(\hat{F}_{rep} || \hat{F}_{true}) = \sum_{\boldsymbol x}
+\hat{F}_{rep}(\boldsymbol x) \log\left(\frac{\hat{F}_{rep}(\boldsymbol
+x)}{\hat{F}_{true}(\boldsymbol x)}\right).
 \]</span></p>
-<p>This metric is accessed in <code>representr</code> using the <code>emp_kl_div()</code> command.</p>
+<p>This metric is accessed in <code>representr</code> using the
+<code>emp_kl_div()</code> command.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>true_dat <span class="ot">&lt;-</span> rl_reg1[<span class="fu">unique</span>(identity.rl_reg1),] <span class="co"># true records</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">emp_kl_div</span>(true_dat, rep_random, <span class="fu">c</span>(<span class="st">&quot;sex&quot;</span>), <span class="fu">c</span>(<span class="st">&quot;income&quot;</span>, <span class="st">&quot;bp&quot;</span>))</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.01532769</span></span>
@@ -802,28 +1228,33 @@ The distribution of PP weights as generated from posterior draws of <span class=
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.05639306</span></span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">emp_kl_div</span>(true_dat, rep_pp_thresh, <span class="fu">c</span>(<span class="st">&quot;sex&quot;</span>), <span class="fu">c</span>(<span class="st">&quot;income&quot;</span>, <span class="st">&quot;bp&quot;</span>))</span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.007088876</span></span></code></pre></div>
-<p>The representative dataset based on the posterior prototyping weights is the closest to the truth using the three variables we might be interested in using for regression. This might indicate that we should use this representation in a downstream model, like linear regression.</p>
+<p>The representative dataset based on the posterior prototyping weights
+is the closest to the truth using the three variables we might be
+interested in using for regression. This might indicate that we should
+use this representation in a downstream model, like linear
+regression.</p>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1 class="unnumbered">References</h1>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-binette2020almost" class="csl-entry">
-Binette, Olivier, and Rebecca C Steorts. n.d. <span>“(Almost) All of Entity Resolution.”</span> <em>arXiv Preprint arXiv:2008.04443</em>. <a href="https://arxiv.org/abs/2008.04443">https://arxiv.org/abs/2008.04443</a>.
+Binette, Olivier, and Rebecca C Steorts. n.d. <span>“(Almost) All of
+Entity Resolution.”</span> <em>arXiv Preprint arXiv:2008.04443</em>. <a href="https://arxiv.org/abs/2008.04443">https://arxiv.org/abs/2008.04443</a>.
 </div>
 <div id="ref-kaplan2018posterior" class="csl-entry">
-Kaplan, Andee, Brenda Betancourt, and Rebecca C. Steorts. n.d. <span>“Posterior Prototyping: Bridging the Gap Between Record Linkage and Regression.”</span> <em>arXiv Preprint arXiv:1810.01538</em>. <a href="https://arxiv.org/abs/1810.01538">https://arxiv.org/abs/1810.01538</a>.
+Kaplan, Andee, Brenda Betancourt, and Rebecca C. Steorts. n.d.
+<span>“Posterior Prototyping: Bridging the Gap Between Record Linkage
+and Regression.”</span> <em>arXiv Preprint arXiv:1810.01538</em>. <a href="https://arxiv.org/abs/1810.01538">https://arxiv.org/abs/1810.01538</a>.
 </div>
 <div id="ref-dblinkR" class="csl-entry">
-Marchant, Neil. 2021. <span>“dblinkR: R Interface for Dblink.”</span> <em>R Package Version 0.2.0</em>. <a href="https://github.com/cleanzr/dblinkR">https://github.com/cleanzr/dblinkR</a>.
+Marchant, Neil. 2021. <span>“dblinkR: R Interface for Dblink.”</span>
+<em>R Package Version 0.2.0</em>. <a href="https://github.com/cleanzr/dblinkR">https://github.com/cleanzr/dblinkR</a>.
 </div>
 <div id="ref-marchant2020d" class="csl-entry">
-Marchant, Neil G, Andee Kaplan, Daniel N Elazar, Benjamin IP Rubinstein, and Rebecca C Steorts. 2020. <span>“D-Blink: Distributed End-to-End Bayesian Entity Resolution.”</span> <em>Journal of Computational and Graphical Statistics</em> just-accepted: 1–42.
-</div>
-<div id="ref-blink" class="csl-entry">
-Steorts, Rebecca C. n.d. <span>“Blink: Record Linkage for Empirically Motivated Priors.”</span> <a href="https://CRAN.R-project.org/package=blink">https://CRAN.R-project.org/package=blink</a>.
-</div>
-<div id="ref-steorts2015entity" class="csl-entry">
-———. 2015. <span>“Entity Resolution with Empirically Motivated Priors.”</span> <em>Bayesian Analysis</em> 10 (4): 849–75.
+Marchant, Neil G, Andee Kaplan, Daniel N Elazar, Benjamin IP Rubinstein,
+and Rebecca C Steorts. 2020. <span>“D-Blink: Distributed End-to-End
+Bayesian Entity Resolution.”</span> <em>Journal of Computational and
+Graphical Statistics</em> just-accepted: 1–42.
 </div>
 </div>
 </div>
