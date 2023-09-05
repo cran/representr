@@ -1,6 +1,6 @@
-6ad58417e6626f5d70835d02f3b7d5b8 *DESCRIPTION
+9189962f4e4ba22806dcaaf2b79e2827 *DESCRIPTION
 ae581e1dbed2af6a3b101af02e246a65 *NAMESPACE
-036720a73618f66e6ea03e8a73e3dfbe *NEWS.md
+1c337a0ed1dc77c51572c55d21e91ed1 *NEWS.md
 ac47515e210bd04c752c916e29a4dcf2 *R/RcppExports.R
 9b904caa030b888af99d10451a6be4c6 *R/clust_comp.R
 89c241b7df845d3f5c27f5faae4c65be *R/clust_proto.R
@@ -9,7 +9,7 @@ ffaa058e0a8934418acb1b3eccf14bcd *R/emp_kl.R
 d56e7d7911e732e016807e5e540769e4 *R/record_distance.R
 78b790e5dc3f73c2e0347fdb7822e923 *R/represent.R
 1e0e7c8a2d6d868dbb9efcf50e6c0bde *R/representr-package.R
-79f44614948e4de5159caa0e2141c5e6 *R/representr.R
+78abca1107c61dc675d5c68fa4067bf7 *R/representr.R
 2cae4f3d1fc01577941981575498c34f *R/rl_reg.R
 5e077ff247c766df7e36d4bf2d3ba0f9 *R/zzz.R
 353df674963dd74ff540f3087c2ee9d5 *build/vignette.rds
@@ -22,7 +22,7 @@ ba5c21d2baf1919f60085dad5cab6241 *data/rl_reg2.RData
 0eb503184e64c529e341387d697f2ad1 *data/rl_reg5.RData
 153dfa9d7b14b5925ac4aff7ba5241e6 *inst/doc/representr.R
 b77f4a734d8a0a1bd9272940f3e77d27 *inst/doc/representr.Rmd
-2625690e3100a17dd160489e2c5cf5c9 *inst/doc/representr.html
+6960a9ff33459cd085daa235bf8ed7d7 *inst/doc/representr.html
 57aa8e20c04addf5fab2d599a5b3fdd2 *inst/extdata/clean_data.R
 c49d639c899351fdd3251a511dadec47 *inst/extdata/rl_reg1_raw.RData
 30d37c667664533a81aa5306ace2d67c *inst/extdata/rl_reg2_raw.RData
