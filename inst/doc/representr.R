@@ -22,14 +22,14 @@ knitr::kable(head(rl_reg1))
 ## -----------------------------------------------------------------------------
 data("linkage.rl")
 
-## ---- echo=FALSE--------------------------------------------------------------
+## ----echo=FALSE---------------------------------------------------------------
 # take the last iteration of linkage for lambda value
 lambda <- linkage.rl[nrow(linkage.rl),]
 
 # split data by linkage results
 clusters <- split(rl_reg1, lambda)
 
-## ---- echo=FALSE--------------------------------------------------------------
+## ----echo=FALSE---------------------------------------------------------------
 knitr::kable(clusters[[names(which(table(lambda) == 4)[1])]])
 
 ## ----random-------------------------------------------------------------------
@@ -37,7 +37,7 @@ knitr::kable(clusters[[names(which(table(lambda) == 4)[1])]])
 random_id <- represent(rl_reg1, lambda, "proto_random", parallel = FALSE)
 rep_random <- rl_reg1[random_id,] # representative records (random)
 
-## ---- echo = FALSE------------------------------------------------------------
+## ----echo = FALSE-------------------------------------------------------------
 knitr::kable(rep_random[as.numeric(names(which(table(lambda) == 4)))[1:5],])
 
 ## ----minimax------------------------------------------------------------------
@@ -53,14 +53,14 @@ minimax_id <- represent(rl_reg1, linkage.rl[nrow(linkage.rl),], "proto_minimax",
                         weights = weights, orders = orders, scale = TRUE, parallel = FALSE)
 rep_minimax <- rl_reg1[minimax_id,] # representative records (minimax)
 
-## ---- echo = FALSE------------------------------------------------------------
+## ----echo = FALSE-------------------------------------------------------------
 knitr::kable(rep_minimax[as.numeric(names(which(table(lambda) == 4)))[1:5],])
 
 ## ----composite----------------------------------------------------------------
 # representative records (composite)
 rep_composite <- represent(rl_reg1, linkage.rl[nrow(linkage.rl),], "composite", col_type = col_type, parallel = FALSE)
 
-## ---- echo = FALSE------------------------------------------------------------
+## ----echo = FALSE-------------------------------------------------------------
 knitr::kable(rep_composite[as.numeric(names(which(table(lambda) == 4)))[1:5],])
 
 ## ----pp-----------------------------------------------------------------------
@@ -87,7 +87,7 @@ ggplot(threshold_df) +
 # representative records (PP threshold)
 rep_pp_thresh <- rl_reg1[pp_weights > .5, ]
 
-## ---- echo = FALSE------------------------------------------------------------
+## ----echo = FALSE-------------------------------------------------------------
 knitr::kable(head(rep_pp_thresh))
 
 ## ----empkl_div, message = FALSE, warning = FALSE------------------------------

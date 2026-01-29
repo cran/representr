@@ -1,10 +1,10 @@
-9189962f4e4ba22806dcaaf2b79e2827 *DESCRIPTION
+0987f8241c834d6cc7e6ff68079183cd *DESCRIPTION
 ae581e1dbed2af6a3b101af02e246a65 *NAMESPACE
-1c337a0ed1dc77c51572c55d21e91ed1 *NEWS.md
+4358c66f093d6784e70815b87b8fba62 *NEWS.md
 ac47515e210bd04c752c916e29a4dcf2 *R/RcppExports.R
 9b904caa030b888af99d10451a6be4c6 *R/clust_comp.R
 89c241b7df845d3f5c27f5faae4c65be *R/clust_proto.R
-ffaa058e0a8934418acb1b3eccf14bcd *R/emp_kl.R
+189bbd257a94c7488fb2e4f87a104cd6 *R/emp_kl.R
 04bbf109d1f21aa5a33dccc105057dc7 *R/pp_weights.R
 d56e7d7911e732e016807e5e540769e4 *R/record_distance.R
 78b790e5dc3f73c2e0347fdb7822e923 *R/represent.R
@@ -12,7 +12,7 @@ d56e7d7911e732e016807e5e540769e4 *R/record_distance.R
 78abca1107c61dc675d5c68fa4067bf7 *R/representr.R
 2cae4f3d1fc01577941981575498c34f *R/rl_reg.R
 5e077ff247c766df7e36d4bf2d3ba0f9 *R/zzz.R
-353df674963dd74ff540f3087c2ee9d5 *build/vignette.rds
+ef9aded2a5c2eab914dde5250cd2b978 *build/vignette.rds
 390946eefaa5120ceadd851075fc41cf *data/identity.rl_reg1.RData
 a1e5131dd786e8aea9f8f0ba7f50f675 *data/identity.rl_reg2.RData
 62c11555a198f62cb80c197e03acab4b *data/identity.rl_reg5.RData
@@ -20,9 +20,9 @@ a1e5131dd786e8aea9f8f0ba7f50f675 *data/identity.rl_reg2.RData
 a9d8e8d4aba035f4f00eace375e2ef04 *data/rl_reg1.RData
 ba5c21d2baf1919f60085dad5cab6241 *data/rl_reg2.RData
 0eb503184e64c529e341387d697f2ad1 *data/rl_reg5.RData
-153dfa9d7b14b5925ac4aff7ba5241e6 *inst/doc/representr.R
+45ed64d0d12cff37bfc08349c78b225f *inst/doc/representr.R
 b77f4a734d8a0a1bd9272940f3e77d27 *inst/doc/representr.Rmd
-6960a9ff33459cd085daa235bf8ed7d7 *inst/doc/representr.html
+81d54a41f8bea53105259617e1764c87 *inst/doc/representr.html
 57aa8e20c04addf5fab2d599a5b3fdd2 *inst/extdata/clean_data.R
 c49d639c899351fdd3251a511dadec47 *inst/extdata/rl_reg1_raw.RData
 30d37c667664533a81aa5306ace2d67c *inst/extdata/rl_reg2_raw.RData
@@ -36,7 +36,7 @@ ab23639911aca68d15b7554ff02262fb *man/dist_col_type.Rd
 050b70c6ab823dbf86dc95ea7ddf0d0a *man/emp_kl_div.Rd
 f957c80d6503529e652e187077b647c0 *man/pp_weights.Rd
 8801319283e24a0c6bd7b35068a83b73 *man/represent.Rd
-62ec991c774b0b663eb69bc48bc2734f *man/representr.Rd
+3867ea85ac68b2cbc761f556ee9459a0 *man/representr.Rd
 dd165f19e65d33d1d808070cc10fac08 *man/rl_reg1.Rd
 c969e7f57464639af52c643284f43940 *man/within_category_compare_cpp.Rd
 7cc14aaf4e9b43167d156ac973e01c68 *src/Makevars
